@@ -1,0 +1,38 @@
+{
+    "sourceFile": "backend/server.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 5,
+            "patches": [
+                {
+                    "date": 1773113600002,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773191187342,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,30 +2,34 @@\n const cors = require('cors');\r\n const bodyParser = require('body-parser');\r\n const multer = require('multer');\r\n const path = require('path');\r\n+const fs = require('fs');\r\n \r\n const db = require('./database');\r\n-const productsRoutes = require('./routes/products');\r\n-const inventoryRoutes = require('./routes/inventory');\r\n-const transactionsRoutes = require('./routes/transactions');\r\n-const dashboardRoutes = require('./routes/dashboard');\r\n \r\n const app = express();\r\n const PORT = process.env.PORT || 5000;\r\n \r\n app.use(cors());\r\n app.use(bodyParser.json());\r\n-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));\r\n+app.use(bodyParser.urlencoded({ extended: true }));\r\n \r\n+// إنشاء مجلد uploads إذا لم يكن موجوداً\r\n+const uploadDir = path.join(__dirname, 'uploads');\r\n+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);\r\n+app.use('/uploads', express.static(uploadDir));\r\n+\r\n+// إعداد multer لرفع الصور\r\n const storage = multer.diskStorage({\r\n-  destination: (req, file, cb) => cb(null, 'uploads/'),\r\n+  destination: (req, file, cb) => cb(null, uploadDir),\r\n   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))\r\n });\r\n const upload = multer({ storage });\r\n \r\n-app.use('/api/products', productsRoutes(upload));\r\n-app.use('/api/inventory', inventoryRoutes);\r\n-app.use('/api/transactions', transactionsRoutes);\r\n-app.use('/api/dashboard', dashboardRoutes);\r\n+// تمرير middleware إلى routes\r\n+app.use('/api/products', require('./routes/products')(upload));\r\n+app.use('/api/inventory', require('./routes/inventory'));\r\n+app.use('/api/transactions', require('./routes/transactions'));\r\n+app.use('/api/dashboard', require('./routes/dashboard'));\r\n \r\n app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1773192581324,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,23 +13,23 @@\n app.use(cors());\r\n app.use(bodyParser.json());\r\n app.use(bodyParser.urlencoded({ extended: true }));\r\n \r\n-// إنشاء مجلد uploads إذا لم يكن موجوداً\r\n const uploadDir = path.join(__dirname, 'uploads');\r\n if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);\r\n app.use('/uploads', express.static(uploadDir));\r\n \r\n-// إعداد multer لرفع الصور\r\n const storage = multer.diskStorage({\r\n   destination: (req, file, cb) => cb(null, uploadDir),\r\n   filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))\r\n });\r\n const upload = multer({ storage });\r\n \r\n-// تمرير middleware إلى routes\r\n+// Routes\r\n+app.use('/api/auth', require('./routes/auth'));\r\n app.use('/api/products', require('./routes/products')(upload));\r\n app.use('/api/inventory', require('./routes/inventory'));\r\n app.use('/api/transactions', require('./routes/transactions'));\r\n app.use('/api/dashboard', require('./routes/dashboard'));\r\n+app.use('/api/admin', require('./routes/admin')); // new admin routes\r\n \r\n app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1773195162235,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -29,7 +29,7 @@\n app.use('/api/products', require('./routes/products')(upload));\r\n app.use('/api/inventory', require('./routes/inventory'));\r\n app.use('/api/transactions', require('./routes/transactions'));\r\n app.use('/api/dashboard', require('./routes/dashboard'));\r\n-app.use('/api/admin', require('./routes/admin')); // new admin routes\r\n+app.use('/api/admin', require('./routes/admin'));\r\n \r\n app.listen(PORT, () => console.log(`Server running on port ${PORT}`));\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1773196460653,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,6 @@\n const express = require('express');\r\n+process.env.TZ = 'Asia/Riyadh';\r\n const cors = require('cors');\r\n const bodyParser = require('body-parser');\r\n const multer = require('multer');\r\n const path = require('path');\r\n"
+                },
+                {
+                    "date": 1773196466314,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,6 +1,5 @@\n const express = require('express');\r\n-\r\n const cors = require('cors');\r\n const bodyParser = require('body-parser');\r\n const multer = require('multer');\r\n const path = require('path');\r\n"
+                }
+            ],
+            "date": 1773113600002,
+            "name": "Commit-0",
+            "content": "const express = require('express');\r\nconst cors = require('cors');\r\nconst bodyParser = require('body-parser');\r\nconst multer = require('multer');\r\nconst path = require('path');\r\n\r\nconst db = require('./database');\r\nconst productsRoutes = require('./routes/products');\r\nconst inventoryRoutes = require('./routes/inventory');\r\nconst transactionsRoutes = require('./routes/transactions');\r\nconst dashboardRoutes = require('./routes/dashboard');\r\n\r\nconst app = express();\r\nconst PORT = process.env.PORT || 5000;\r\n\r\napp.use(cors());\r\napp.use(bodyParser.json());\r\napp.use('/uploads', express.static(path.join(__dirname, 'uploads')));\r\n\r\nconst storage = multer.diskStorage({\r\n  destination: (req, file, cb) => cb(null, 'uploads/'),\r\n  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))\r\n});\r\nconst upload = multer({ storage });\r\n\r\napp.use('/api/products', productsRoutes(upload));\r\napp.use('/api/inventory', inventoryRoutes);\r\napp.use('/api/transactions', transactionsRoutes);\r\napp.use('/api/dashboard', dashboardRoutes);\r\n\r\napp.listen(PORT, () => console.log(`Server running on port ${PORT}`));"
+        }
+    ]
+}

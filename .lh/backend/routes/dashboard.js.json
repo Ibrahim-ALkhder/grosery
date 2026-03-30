@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/dashboard.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1773113635755,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773197932545,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,15 +1,16 @@\n const express = require('express');\r\n const db = require('../database');\r\n+const dateHelper = require('../utils/dateHelper');\r\n const router = express.Router();\r\n-const moment = require('moment');\r\n \r\n router.get('/', (req, res) => {\r\n-  const today = moment().format('YYYY-MM-DD');\r\n+  const todayStart = dateHelper.startOfDayUTC();\r\n+  const todayEnd = dateHelper.endOfDayUTC();\r\n \r\n   db.get(\r\n-    `SELECT COUNT(*) as count, SUM(total) as total FROM transactions WHERE DATE(created_at) = ?`,\r\n-    [today],\r\n+    `SELECT COUNT(*) as count, COALESCE(SUM(total), 0) as total FROM transactions WHERE created_at BETWEEN ? AND ?`,\r\n+    [todayStart, todayEnd],\r\n     (err, todayStats) => {\r\n       if (err) return res.status(500).json({ error: err.message });\r\n \r\n       db.all(\r\n@@ -17,16 +18,16 @@\n          GROUP BY product_name ORDER BY total_sold DESC LIMIT 5`,\r\n         (err, bestSellers) => {\r\n           if (err) return res.status(500).json({ error: err.message });\r\n \r\n-          db.all('SELECT * FROM products WHERE stock <= min_stock', (err, lowStock) => {\r\n+          db.all('SELECT * FROM products WHERE stock <= min_stock ORDER BY stock ASC', (err, lowStock) => {\r\n             if (err) return res.status(500).json({ error: err.message });\r\n \r\n             res.json({\r\n-              todaySales: todayStats.total || 0,\r\n-              todayTransactions: todayStats.count || 0,\r\n-              bestSellers,\r\n-              lowStock\r\n+              todaySales: todayStats?.total || 0,\r\n+              todayTransactions: todayStats?.count || 0,\r\n+              bestSellers: bestSellers || [],\r\n+              lowStock: lowStock || []\r\n             });\r\n           });\r\n         }\r\n       );\r\n"
+                }
+            ],
+            "date": 1773113635755,
+            "name": "Commit-0",
+            "content": "const express = require('express');\r\nconst db = require('../database');\r\nconst router = express.Router();\r\nconst moment = require('moment');\r\n\r\nrouter.get('/', (req, res) => {\r\n  const today = moment().format('YYYY-MM-DD');\r\n\r\n  db.get(\r\n    `SELECT COUNT(*) as count, SUM(total) as total FROM transactions WHERE DATE(created_at) = ?`,\r\n    [today],\r\n    (err, todayStats) => {\r\n      if (err) return res.status(500).json({ error: err.message });\r\n\r\n      db.all(\r\n        `SELECT product_name, SUM(quantity) as total_sold FROM transaction_items\r\n         GROUP BY product_name ORDER BY total_sold DESC LIMIT 5`,\r\n        (err, bestSellers) => {\r\n          if (err) return res.status(500).json({ error: err.message });\r\n\r\n          db.all('SELECT * FROM products WHERE stock <= min_stock', (err, lowStock) => {\r\n            if (err) return res.status(500).json({ error: err.message });\r\n\r\n            res.json({\r\n              todaySales: todayStats.total || 0,\r\n              todayTransactions: todayStats.count || 0,\r\n              bestSellers,\r\n              lowStock\r\n            });\r\n          });\r\n        }\r\n      );\r\n    }\r\n  );\r\n});\r\n\r\nmodule.exports = router;"
+        }
+    ]
+}

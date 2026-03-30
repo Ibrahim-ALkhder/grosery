@@ -1,0 +1,18 @@
+{
+    "sourceFile": "frontend/package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1773113651535,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1773113651535,
+            "name": "Commit-0",
+            "content": "{\r\n  \"name\": \"grocery-pos-frontend\",\r\n  \"private\": true,\r\n  \"version\": \"0.0.0\",\r\n  \"type\": \"module\",\r\n  \"scripts\": {\r\n    \"dev\": \"vite\",\r\n    \"build\": \"vite build\",\r\n    \"preview\": \"vite preview\"\r\n  },\r\n  \"dependencies\": {\r\n    \"react\": \"^18.2.0\",\r\n    \"react-dom\": \"^18.2.0\",\r\n    \"react-router-dom\": \"^6.14.2\",\r\n    \"axios\": \"^1.4.0\",\r\n    \"react-hot-toast\": \"^2.4.1\",\r\n    \"react-icons\": \"^4.10.1\",\r\n    \"date-fns\": \"^2.30.0\"\r\n  },\r\n  \"devDependencies\": {\r\n    \"@types/react\": \"^18.2.15\",\r\n    \"@types/react-dom\": \"^18.2.7\",\r\n    \"@vitejs/plugin-react\": \"^4.0.3\",\r\n    \"autoprefixer\": \"^10.4.14\",\r\n    \"postcss\": \"^8.4.27\",\r\n    \"tailwindcss\": \"^3.3.3\",\r\n    \"vite\": \"^4.4.5\"\r\n  }\r\n}"
+        }
+    ]
+}

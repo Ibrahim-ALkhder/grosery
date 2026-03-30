@@ -1,0 +1,26 @@
+{
+    "sourceFile": "frontend/src/context/LanguageContext.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1773207788195,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773208520536,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -20,17 +20,25 @@\n     ar,\r\n     en\r\n   };\r\n \r\n-  const t = (key) => {\r\n-    return translations[language][key] || key;\r\n+  const t = (key, params = {}) => {\r\n+    let text = translations[language][key];\r\n+    if (!text) {\r\n+      console.warn(`Translation key not found: ${key}`);\r\n+      return key;\r\n+    }\r\n+    // استبدال المتغيرات مثل {name} بالقيم المدخلة\r\n+    Object.keys(params).forEach(param => {\r\n+      text = text.replace(`{${param}}`, params[param]);\r\n+    });\r\n+    return text;\r\n   };\r\n \r\n   const toggleLanguage = () => {\r\n     const newLang = language === 'en' ? 'ar' : 'en';\r\n     setLanguage(newLang);\r\n     localStorage.setItem('language', newLang);\r\n-    // تغيير اتجاه الصفحة\r\n     document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';\r\n     document.documentElement.lang = newLang;\r\n   };\r\n \r\n"
+                },
+                {
+                    "date": 1773210215991,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -15,20 +15,16 @@\n     const saved = localStorage.getItem('language');\r\n     return saved || 'en';\r\n   });\r\n \r\n-  const translations = {\r\n-    ar,\r\n-    en\r\n-  };\r\n+  const translations = { ar, en };\r\n \r\n   const t = (key, params = {}) => {\r\n     let text = translations[language][key];\r\n     if (!text) {\r\n       console.warn(`Translation key not found: ${key}`);\r\n       return key;\r\n     }\r\n-    // استبدال المتغيرات مثل {name} بالقيم المدخلة\r\n     Object.keys(params).forEach(param => {\r\n       text = text.replace(`{${param}}`, params[param]);\r\n     });\r\n     return text;\r\n"
+                }
+            ],
+            "date": 1773207788195,
+            "name": "Commit-0",
+            "content": "import React, { createContext, useState, useContext, useEffect } from 'react';\r\nimport ar from '../locales/ar';\r\nimport en from '../locales/en';\r\n\r\nconst LanguageContext = createContext();\r\n\r\nexport const useLanguage = () => {\r\n  const context = useContext(LanguageContext);\r\n  if (!context) throw new Error('useLanguage must be used within LanguageProvider');\r\n  return context;\r\n};\r\n\r\nexport const LanguageProvider = ({ children }) => {\r\n  const [language, setLanguage] = useState(() => {\r\n    const saved = localStorage.getItem('language');\r\n    return saved || 'en';\r\n  });\r\n\r\n  const translations = {\r\n    ar,\r\n    en\r\n  };\r\n\r\n  const t = (key) => {\r\n    return translations[language][key] || key;\r\n  };\r\n\r\n  const toggleLanguage = () => {\r\n    const newLang = language === 'en' ? 'ar' : 'en';\r\n    setLanguage(newLang);\r\n    localStorage.setItem('language', newLang);\r\n    // تغيير اتجاه الصفحة\r\n    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';\r\n    document.documentElement.lang = newLang;\r\n  };\r\n\r\n  useEffect(() => {\r\n    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';\r\n    document.documentElement.lang = language;\r\n  }, [language]);\r\n\r\n  return (\r\n    <LanguageContext.Provider value={{ language, t, toggleLanguage }}>\r\n      {children}\r\n    </LanguageContext.Provider>\r\n  );\r\n};"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+{
+    "sourceFile": "frontend/src/utils/api.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 3,
+            "patches": [
+                {
+                    "date": 1773113787340,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773200123248,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -3,5 +3,17 @@\n const api = axios.create({\r\n   baseURL: 'http://localhost:5000/api',\r\n });\r\n \r\n+// إضافة معرف المستخدم إلى كل طلب إذا كان مسجلاً\r\n+api.interceptors.request.use((config) => {\r\n+  const userStr = localStorage.getItem('pos_user');\r\n+  if (userStr) {\r\n+    try {\r\n+      const user = JSON.parse(userStr);\r\n+      config.headers['X-User-Id'] = user.id;\r\n+    } catch (e) {}\r\n+  }\r\n+  return config;\r\n+});\r\n+\r\n export default api;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1773200455920,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,19 +1,36 @@\n import axios from 'axios';\r\n \r\n const api = axios.create({\r\n   baseURL: 'http://localhost:5000/api',\r\n+  headers: {\r\n+    'Content-Type': 'application/json',\r\n+  },\r\n });\r\n \r\n // إضافة معرف المستخدم إلى كل طلب إذا كان مسجلاً\r\n-api.interceptors.request.use((config) => {\r\n-  const userStr = localStorage.getItem('pos_user');\r\n-  if (userStr) {\r\n-    try {\r\n-      const user = JSON.parse(userStr);\r\n-      config.headers['X-User-Id'] = user.id;\r\n-    } catch (e) {}\r\n+api.interceptors.request.use(\r\n+  (config) => {\r\n+    const userStr = localStorage.getItem('pos_user');\r\n+    if (userStr) {\r\n+      try {\r\n+        const user = JSON.parse(userStr);\r\n+        config.headers['X-User-Id'] = user.id;\r\n+      } catch (e) {\r\n+        console.error('Failed to parse user from localStorage', e);\r\n+      }\r\n+    }\r\n+    return config;\r\n+  },\r\n+  (error) => Promise.reject(error)\r\n+);\r\n+\r\n+// معالجة الأخطاء\r\n+api.interceptors.response.use(\r\n+  response => response,\r\n+  error => {\r\n+    console.error('API Error:', error.response?.data || error.message);\r\n+    return Promise.reject(error);\r\n   }\r\n-  return config;\r\n-});\r\n+);\r\n \r\n export default api;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1773201292788,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -13,9 +13,11 @@\n     const userStr = localStorage.getItem('pos_user');\r\n     if (userStr) {\r\n       try {\r\n         const user = JSON.parse(userStr);\r\n-        config.headers['X-User-Id'] = user.id;\r\n+        if (user && user.id) {\r\n+          config.headers['X-User-Id'] = user.id;\r\n+        }\r\n       } catch (e) {\r\n         console.error('Failed to parse user from localStorage', e);\r\n       }\r\n     }\r\n"
+                }
+            ],
+            "date": 1773113787340,
+            "name": "Commit-0",
+            "content": "import axios from 'axios';\r\n\r\nconst api = axios.create({\r\n  baseURL: 'http://localhost:5000/api',\r\n});\r\n\r\nexport default api;"
+        }
+    ]
+}

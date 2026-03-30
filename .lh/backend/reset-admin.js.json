@@ -1,0 +1,18 @@
+{
+    "sourceFile": "backend/reset-admin.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1773203668422,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1773203668422,
+            "name": "Commit-0",
+            "content": "const sqlite3 = require('sqlite3').verbose();\r\nconst bcrypt = require('bcryptjs');\r\nconst path = require('path');\r\n\r\nconst dbPath = path.resolve(__dirname, '../database.sqlite');\r\nconst db = new sqlite3.Database(dbPath);\r\n\r\nconst username = 'admin1';\r\nconst newPassword = '1234';\r\nconst salt = bcrypt.genSaltSync(10);\r\nconst hash = bcrypt.hashSync(newPassword, salt);\r\n\r\ndb.run(\r\n  `UPDATE users SET password = ?, status = 'active' WHERE username = ?`,\r\n  [hash, username],\r\n  function(err) {\r\n    if (err) {\r\n      console.error('Error updating admin:', err);\r\n    } else {\r\n      if (this.changes > 0) {\r\n        console.log(`✅ Admin account '${username}' has been reset to password '${newPassword}' and activated.`);\r\n      } else {\r\n        console.log(`❌ Admin account '${username}' not found.`);\r\n      }\r\n    }\r\n    db.close();\r\n  }\r\n);"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "frontend/src/context/NotificationContext.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1773206476561,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1773206476561,
+            "name": "Commit-0",
+            "content": "import React, { createContext, useState, useContext, useEffect } from 'react';\r\nimport api from '../utils/api';\r\nimport { useAuth } from './AuthContext';\r\n\r\nconst NotificationContext = createContext();\r\n\r\nexport const useNotifications = () => {\r\n  const context = useContext(NotificationContext);\r\n  if (!context) throw new Error('useNotifications must be used within NotificationProvider');\r\n  return context;\r\n};\r\n\r\nexport const NotificationProvider = ({ children }) => {\r\n  const { user } = useAuth();\r\n  const [notifications, setNotifications] = useState([]);\r\n  const [unreadCount, setUnreadCount] = useState(0);\r\n  const [loading, setLoading] = useState(false);\r\n\r\n  const fetchNotifications = async () => {\r\n    if (!user) return;\r\n    try {\r\n      const res = await api.get('/notifications');\r\n      setNotifications(res.data);\r\n      const unread = res.data.filter(n => !n.is_read).length;\r\n      setUnreadCount(unread);\r\n    } catch (error) {\r\n      console.error('Failed to fetch notifications:', error);\r\n    }\r\n  };\r\n\r\n  const fetchUnreadCount = async () => {\r\n    if (!user) return;\r\n    try {\r\n      const res = await api.get('/notifications/unread-count');\r\n      setUnreadCount(res.data.count);\r\n    } catch (error) {\r\n      console.error('Failed to fetch unread count:', error);\r\n    }\r\n  };\r\n\r\n  const markAsRead = async (notificationId) => {\r\n    try {\r\n      await api.put(`/notifications/${notificationId}/read`);\r\n      setNotifications(prev =>\r\n        prev.map(n => n.id === notificationId ? { ...n, is_read: 1 } : n)\r\n      );\r\n      setUnreadCount(prev => Math.max(0, prev - 1));\r\n    } catch (error) {\r\n      console.error('Failed to mark as read:', error);\r\n    }\r\n  };\r\n\r\n  const markAllAsRead = async () => {\r\n    try {\r\n      await api.put('/notifications/read-all');\r\n      setNotifications(prev => prev.map(n => ({ ...n, is_read: 1 })));\r\n      setUnreadCount(0);\r\n    } catch (error) {\r\n      console.error('Failed to mark all as read:', error);\r\n    }\r\n  };\r\n\r\n  const sendNotification = async (title, message, targetRole) => {\r\n    try {\r\n      const res = await api.post('/notifications/send', { title, message, targetRole });\r\n      return res.data;\r\n    } catch (error) {\r\n      throw error;\r\n    }\r\n  };\r\n\r\n  useEffect(() => {\r\n    if (user) {\r\n      fetchNotifications();\r\n      const interval = setInterval(fetchUnreadCount, 30000);\r\n      return () => clearInterval(interval);\r\n    }\r\n  }, [user]);\r\n\r\n  const value = {\r\n    notifications,\r\n    unreadCount,\r\n    loading,\r\n    fetchNotifications,\r\n    markAsRead,\r\n    markAllAsRead,\r\n    sendNotification,\r\n  };\r\n\r\n  return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;\r\n};"
+        }
+    ]
+}

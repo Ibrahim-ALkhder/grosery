@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/auth.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1773192521038,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773195089191,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,15 +12,14 @@\n \r\n     const valid = bcrypt.compareSync(password, user.password);\r\n     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });\r\n \r\n-    // لا نعيد كلمة المرور\r\n     const { password: _, ...userWithoutPassword } = user;\r\n     res.json(userWithoutPassword);\r\n   });\r\n });\r\n \r\n-// تسجيل خروج (اختياري، يمكن تجاهله)\r\n+// تسجيل خروج (اختياري)\r\n router.post('/logout', (req, res) => {\r\n   res.json({ success: true });\r\n });\r\n \r\n"
+                }
+            ],
+            "date": 1773192521038,
+            "name": "Commit-0",
+            "content": "const express = require('express');\r\nconst bcrypt = require('bcryptjs');\r\nconst db = require('../database');\r\nconst router = express.Router();\r\n\r\n// تسجيل الدخول\r\nrouter.post('/login', (req, res) => {\r\n  const { username, password } = req.body;\r\n  db.get('SELECT * FROM users WHERE username = ? AND status = \"active\"', [username], (err, user) => {\r\n    if (err) return res.status(500).json({ error: err.message });\r\n    if (!user) return res.status(401).json({ error: 'Invalid credentials' });\r\n\r\n    const valid = bcrypt.compareSync(password, user.password);\r\n    if (!valid) return res.status(401).json({ error: 'Invalid credentials' });\r\n\r\n    // لا نعيد كلمة المرور\r\n    const { password: _, ...userWithoutPassword } = user;\r\n    res.json(userWithoutPassword);\r\n  });\r\n});\r\n\r\n// تسجيل خروج (اختياري، يمكن تجاهله)\r\nrouter.post('/logout', (req, res) => {\r\n  res.json({ success: true });\r\n});\r\n\r\nmodule.exports = router;"
+        }
+    ]
+}

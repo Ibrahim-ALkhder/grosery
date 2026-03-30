@@ -1,0 +1,18 @@
+{
+    "sourceFile": "frontend/src/pages/AdminLayout.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1773192781974,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1773192781974,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';\r\nimport { Toaster } from 'react-hot-toast';\r\nimport { ThemeProvider } from './context/ThemeContext';\r\nimport { AuthProvider } from './context/AuthContext';\r\nimport ProtectedRoute from './components/ProtectedRoute';\r\nimport AdminRoute from './components/AdminRoute';\r\nimport Login from './pages/Login';\r\nimport Layout from './components/Layout';\r\nimport Dashboard from './components/Dashboard';\r\nimport CashierScreen from './components/CashierScreen';\r\nimport ProductManagement from './components/ProductManagement';\r\nimport InventoryManagement from './components/InventoryManagement';\r\nimport SalesHistory from './components/SalesHistory';\r\n\r\n// مكونات الإدارة\r\nimport AdminDashboard from './components/admin/AdminDashboard';\r\nimport CashierManagement from './components/admin/CashierManagement';\r\nimport Reports from './components/admin/Reports';\r\n\r\nfunction App() {\r\n  return (\r\n    <ThemeProvider>\r\n      <AuthProvider>\r\n        <Router>\r\n          <Routes>\r\n            <Route path=\"/login\" element={<Login />} />\r\n            \r\n            {/* المسارات المحمية (للكاشير والمدير) */}\r\n            <Route\r\n              path=\"/*\"\r\n              element={\r\n                <ProtectedRoute>\r\n                  <Layout>\r\n                    <Routes>\r\n                      <Route path=\"/\" element={<Navigate to=\"/cashier\" replace />} />\r\n                      <Route path=\"/dashboard\" element={<Dashboard />} />\r\n                      <Route path=\"/cashier\" element={<CashierScreen />} />\r\n                      <Route path=\"/products\" element={<ProductManagement />} />\r\n                      <Route path=\"/inventory\" element={<InventoryManagement />} />\r\n                      <Route path=\"/sales\" element={<SalesHistory />} />\r\n                      \r\n                      {/* مسارات الإدارة (للمدير فقط) */}\r\n                      <Route path=\"/admin\" element={\r\n                        <AdminRoute>\r\n                          <AdminDashboard />\r\n                        </AdminRoute>\r\n                      } />\r\n                      <Route path=\"/admin/cashiers\" element={\r\n                        <AdminRoute>\r\n                          <CashierManagement />\r\n                        </AdminRoute>\r\n                      } />\r\n                      <Route path=\"/admin/reports\" element={\r\n                        <AdminRoute>\r\n                          <Reports />\r\n                        </AdminRoute>\r\n                      } />\r\n                    </Routes>\r\n                  </Layout>\r\n                </ProtectedRoute>\r\n              }\r\n            />\r\n          </Routes>\r\n        </Router>\r\n        <Toaster \r\n          position=\"top-left\"\r\n          toastOptions={{\r\n            duration: 3000,\r\n            style: {\r\n              background: '#363636',\r\n              color: '#fff',\r\n              borderRadius: '12px',\r\n            },\r\n          }}\r\n        />\r\n      </AuthProvider>\r\n    </ThemeProvider>\r\n  );\r\n}\r\n\r\nexport default App;"
+        }
+    ]
+}

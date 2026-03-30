@@ -1,0 +1,18 @@
+{
+    "sourceFile": "frontend/src/components/AdminRoute.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1773192648970,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1773192648970,
+            "name": "Commit-0",
+            "content": "import React from 'react';\r\nimport { Navigate } from 'react-router-dom';\r\nimport { useAuth } from '../context/AuthContext';\r\n\r\nconst AdminRoute = ({ children }) => {\r\n  const { user, isAdmin, loading } = useAuth();\r\n\r\n  if (loading) {\r\n    return <div className=\"min-h-screen flex items-center justify-center\">Loading...</div>;\r\n  }\r\n\r\n  if (!user) {\r\n    return <Navigate to=\"/login\" replace />;\r\n  }\r\n\r\n  if (!isAdmin()) {\r\n    return <Navigate to=\"/cashier\" replace />;\r\n  }\r\n\r\n  return children;\r\n};\r\n\r\nexport default AdminRoute;"
+        }
+    ]
+}

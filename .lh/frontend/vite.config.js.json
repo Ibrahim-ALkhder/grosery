@@ -1,0 +1,26 @@
+{
+    "sourceFile": "frontend/vite.config.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1773114465330,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773116001531,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,7 @@\n import { defineConfig } from 'vite'\r\n import react from '@vitejs/plugin-react'\r\n \r\n-// https://vitejs.dev/config/\r\n export default defineConfig({\r\n   plugins: [react()],\r\n   server: {\r\n     port: 5173,\r\n"
+                },
+                {
+                    "date": 1773198937035,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -2,8 +2,11 @@\n import react from '@vitejs/plugin-react'\r\n \r\n export default defineConfig({\r\n   plugins: [react()],\r\n+  optimizeDeps: {\r\n+    include: ['date-fns', 'date-fns-tz'], // إضافة هذا السطر\r\n+  },\r\n   server: {\r\n     port: 5173,\r\n     open: true\r\n   }\r\n"
+                }
+            ],
+            "date": 1773114465330,
+            "name": "Commit-0",
+            "content": "import { defineConfig } from 'vite'\r\nimport react from '@vitejs/plugin-react'\r\n\r\n// https://vitejs.dev/config/\r\nexport default defineConfig({\r\n  plugins: [react()],\r\n  server: {\r\n    port: 5173,\r\n    open: true\r\n  }\r\n})"
+        }
+    ]
+}

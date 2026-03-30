@@ -1,0 +1,22 @@
+{
+    "sourceFile": "backend/routes/inventory.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1773113618088,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1773113876859,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -0,0 +1,21 @@\n+const express = require('express');\r\n+const db = require('../database');\r\n+const router = express.Router();\r\n+\r\n+router.get('/', (req, res) => {\r\n+  db.all('SELECT * FROM products ORDER BY name', (err, rows) => {\r\n+    if (err) return res.status(500).json({ error: err.message });\r\n+    const lowStock = rows.filter(p => p.stock <= p.min_stock);\r\n+    res.json({ products: rows, lowStock });\r\n+  });\r\n+});\r\n+\r\n+router.post('/restock', (req, res) => {\r\n+  const { productId, quantity } = req.body;\r\n+  db.run('UPDATE products SET stock = stock + ? WHERE id = ?', [quantity, productId], function(err) {\r\n+    if (err) return res.status(500).json({ error: err.message });\r\n+    res.json({ success: true });\r\n+  });\r\n+});\r\n+\r\n+module.exports = router;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1773113618088,
+            "name": "Commit-0",
+            "content": "const express = require('express');\r\nconst db = require('../database');\r\nconst router = express.Router();\r\n\r\nrouter.get('/', (req, res) => {\r\n  db.all('SELECT * FROM products ORDER BY name', (err, rows) => {\r\n    if (err) return res.status(500).json({ error: err.message });\r\n    const lowStock = rows.filter(p => p.stock <= p.min_stock);\r\n    res.json({ products: rows, lowStock });\r\n  });\r\n});\r\n\r\nrouter.post('/restock', (req, res) => {\r\n  const { productId, quantity } = req.body;\r\n  db.run('UPDATE products SET stock = stock + ? WHERE id = ?', [quantity, productId], function(err) {\r\n    if (err) return res.status(500).json({ error: err.message });\r\n    res.json({ success: true });\r\n  });\r\n});\r\n\r\nmodule.exports = router;"
+        }
+    ]
+}
