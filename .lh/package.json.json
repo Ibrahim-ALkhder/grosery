@@ -1,0 +1,18 @@
+{
+    "sourceFile": "package.json",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774845224784,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774845224784,
+            "name": "Commit-0",
+            "content": "{\n  \"name\": \"grocery-pos\",\n  \"version\": \"1.0.0\",\n  \"description\": \"Full-stack grocery POS system\",\n  \"main\": \"backend/server.js\",\n  \"scripts\": {\n    \"start\": \"node backend/server.js\",\n    \"dev\": \"concurrently \\\"cd backend && npm run dev\\\" \\\"cd frontend && npm run dev\\\"\",\n    \"install-all\": \"npm install && cd backend && npm install && cd ../frontend && npm install\"\n  },\n  \"dependencies\": {\n    \"concurrently\": \"^8.2.0\"\n  }\n}\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "main.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1774848393318,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1774848393318,
+            "name": "Commit-0",
+            "content": "const { app, BrowserWindow, Menu } = require('electron');\nconst path = require('path');\nconst isDev = require('electron-is-dev');\nconst { spawn } = require('child_process');\nconst fs = require('fs');\n\nlet mainWindow;\nlet backendProcess;\n\nconst createWindow = () => {\n  mainWindow = new BrowserWindow({\n    width: 1400,\n    height: 900,\n    webPreferences: {\n      preload: path.join(__dirname, 'preload.js'),\n      nodeIntegration: false,\n      contextIsolation: true,\n    },\n  });\n\n  const startUrl = isDev\n    ? 'http://localhost:5173'\n    : `file://${path.join(__dirname, '../frontend/dist/index.html')}`;\n\n  mainWindow.loadURL(startUrl);\n\n  if (isDev) {\n    mainWindow.webContents.openDevTools();\n  }\n\n  mainWindow.on('closed', () => {\n    mainWindow = null;\n  });\n};\n\nconst startBackend = () => {\n  const backendPath = path.join(__dirname, 'backend', 'server.js');\n\n  backendProcess = spawn('node', [backendPath], {\n    cwd: path.join(__dirname, 'backend'),\n    env: { ...process.env, NODE_ENV: 'development' },\n  });\n\n  backendProcess.stdout.on('data', (data) => {\n    console.log(`Backend: ${data}`);\n  });\n\n  backendProcess.stderr.on('data', (data) => {\n    console.error(`Backend Error: ${data}`);\n  });\n\n  backendProcess.on('close', (code) => {\n    console.log(`Backend process exited with code ${code}`);\n  });\n};\n\napp.on('ready', () => {\n  startBackend();\n  setTimeout(createWindow, 1000); // Wait for backend to start\n});\n\napp.on('window-all-closed', () => {\n  if (backendProcess) {\n    backendProcess.kill();\n  }\n  if (process.platform !== 'darwin') {\n    app.quit();\n  }\n});\n\napp.on('activate', () => {\n  if (mainWindow === null) {\n    createWindow();\n  }\n});\n"
+        }
+    ]
+}

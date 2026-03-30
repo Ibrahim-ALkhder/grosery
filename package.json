@@ -2,13 +2,46 @@
   "name": "grocery-pos",
   "version": "1.0.0",
   "description": "Full-stack grocery POS system",
-  "main": "backend/server.js",
+  "main": "dist/main.js",
+  "homepage": "./",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "dev": "concurrently \"npm run electron-dev\" \"cd frontend && npm run dev\"",
+    "electron-dev": "nodemon --exec electron .",
+    "build": "cd frontend && npm run build && npm run electron-build",
+    "electron-build": "electron-builder",
+    "dist": "npm run build && npm run electron-build",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
   },
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "electron-is-dev": "^1.2.0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^25.0.0",
+    "nodemon": "^3.0.1"
+  },
+  "build": {
+    "appId": "com.grocery.pos",
+    "productName": "Grocery POS",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "backend/**/*",
+      "frontend/dist/**/*"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
