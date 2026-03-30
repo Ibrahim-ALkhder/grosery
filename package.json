@@ -1,0 +1,14 @@
+{
+  "name": "grocery-pos",
+  "version": "1.0.0",
+  "description": "Full-stack grocery POS system",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
